@@ -5,10 +5,6 @@ import random
 N = 1000
 
 
-def imp():
-	pass
-
-
 def ise_lt(network_file, seeds_file):
 	sum = 0.0
 	network_dict = create_dict(network_file)

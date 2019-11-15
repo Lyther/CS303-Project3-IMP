@@ -15,6 +15,20 @@ def imm(network, k, epsilon, lemma):
 	return s
 
 
+def node_selection(r, k, network):
+	s = []
+	for i in range(k):
+		maximum = 0
+		vertex = 0
+		for v in network.keys():
+			diff = f(r, s + [v]) - f(r, s)
+			if diff > maximum:
+				vertex = v
+				maximum = diff
+		s.append(vertex)
+	return s
+
+
 def sampling(network, k, epsilon, lemma):
 	r = []
 	lb = 1
@@ -52,27 +66,16 @@ def generate(network, v):
 	return ls
 
 
+# this return the fraction of RR sets in r that are
+# covered by a node set s
+# two sets cover each other if r & s != empty
 def f(r, s):
 	count = 0
 	for rr in r:
 		cache = [i for i in rr if i in s]
-		if len(cache):
+		if cache:
 			count = count + 1
 	return count / len(r)
-
-
-def node_selection(r, k, network):
-	s = []
-	for i in range(k):
-		maximum = 0
-		vertex = 0
-		for v in network.keys():
-			diff = f(r, s + [v]) - f(r, s)
-			if diff > maximum:
-				vertex = v
-				maximum = diff
-		s.append(vertex)
-	return s
 
 
 def main(argv):
@@ -127,12 +130,13 @@ def create_dict(model, network_file):
 
 
 def calculate_ise(network_file_name, seeds, model, time):
-	f = open('/tmp/seeds.txt', 'w')
+	cache_file = 'seeds.txt'
+	f = open(cache_file, 'w')
 	for seed in seeds:
 		print(seed, file=f)
 	f.close()
 	network_file = open(network_file_name, 'r')
-	seeds_file = open('/tmp/seeds.txt', 'r')
+	seeds_file = open(cache_file, 'r')
 	if model == 'IC':
 		print(ISE.ise_ic(network_file, seeds_file))
 	elif model == 'LT':
