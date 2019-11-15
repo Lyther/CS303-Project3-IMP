@@ -4,8 +4,10 @@ import random
 
 N = 1000
 
+
 def imp():
 	pass
+
 
 def ise_lt(network_file, seeds_file):
 	sum = 0.0
@@ -15,6 +17,7 @@ def ise_lt(network_file, seeds_file):
 		sum += lt_sample(network_dict, seeds_list)
 	return sum / N
 
+
 def ise_ic(network_file, seeds_file):
 	sum = 0.0
 	network_dict = create_dict(network_file)
@@ -22,6 +25,7 @@ def ise_ic(network_file, seeds_file):
 	for i in range(N):
 		sum += ic_sample(network_dict, seeds_list)
 	return sum / N
+
 
 # The dictionary key is node 1, with value is a list of neighbours.
 # node 1 -> [(neighbour node, weight), ...]
@@ -38,14 +42,16 @@ def create_dict(network_file):
 		# if triple[1] not in network_dict:
 		# 	network_dict[triple[1]] = []
 		network_dict[triple[0]].append((triple[1], triple[2]))
-		# network_dict[triple[1]].append((triple[0], triple[2]))
+	# network_dict[triple[1]].append((triple[0], triple[2]))
 	return network_dict
+
 
 def create_list(seeds_file):
 	seeds = seeds_file.read().splitlines()
 	seeds_file.close()
 	seeds = [int(i) for i in seeds]
 	return seeds
+
 
 def lt_sample(network_dict, seeds_list):
 	active_nodes = seeds_list.copy()
@@ -77,6 +83,7 @@ def lt_sample(network_dict, seeds_list):
 		activity_set = new_activity_set.copy()
 	return count
 
+
 def ic_sample(network_dict, seeds_list):
 	active_nodes = seeds_list.copy()
 	activity_set = seeds_list.copy()
@@ -95,6 +102,7 @@ def ic_sample(network_dict, seeds_list):
 		count += len(new_activity_set)
 		activity_set = new_activity_set.copy()
 	return count
+
 
 def main(argv):
 	network_file = ''
@@ -119,6 +127,7 @@ def main(argv):
 		print(ise_ic(network_file, seeds_file))
 	elif model == 'LT':
 		print(ise_lt(network_file, seeds_file))
+
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

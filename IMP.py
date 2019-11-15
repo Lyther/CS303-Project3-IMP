@@ -2,8 +2,7 @@ import sys
 from math import *
 import getopt
 import random
-
-N = 1000
+import ISE
 
 
 # network is a dict from node to list of tuple
@@ -78,6 +77,7 @@ def node_selection(r, k, network):
 
 def main(argv):
 	network_file = ''
+	network_file_name = ''
 	seed_count = 0
 	model = ''
 	time = ''
@@ -89,6 +89,7 @@ def main(argv):
 	for opt, arg in opts:
 		if opt == '-i':
 			network_file = open(arg, 'r')
+			network_file_name = arg
 		elif opt == '-k':
 			seed_count = int(arg)
 		elif opt == '-m':
@@ -100,7 +101,8 @@ def main(argv):
 		network = create_dict('IC', network_file)
 	elif model == 'LT':
 		network = create_dict('LT', network_file)
-	imm(network, seed_count, 0.5, 1)
+	seeds = imm(network, seed_count, 0.5, 1)
+	calculate_ise(network_file_name, seeds, model, time)
 
 
 def create_dict(model, network_file):
@@ -122,6 +124,19 @@ def create_dict(model, network_file):
 			else:
 				dict[triple[1]].append((triple[0], triple[2]))
 	return dict
+
+
+def calculate_ise(network_file_name, seeds, model, time):
+	f = open('/tmp/seeds.txt', 'w')
+	for seed in seeds:
+		print(seed, file=f)
+	f.close()
+	network_file = open(network_file_name, 'r')
+	seeds_file = open('/tmp/seeds.txt', 'r')
+	if model == 'IC':
+		print(ISE.ise_ic(network_file, seeds_file))
+	elif model == 'LT':
+		print(ISE.ise_lt(network_file, seeds_file))
 
 
 if __name__ == "__main__":
