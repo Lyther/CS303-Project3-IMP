@@ -2,32 +2,36 @@ import sys
 import getopt
 import random
 
-N = 1000
+N = 100
 
 
 def ise_lt(network_file, seeds_file):
-	sum = 0.0
+	cnt = 0.0
 	network_dict = create_dict(network_file)
 	seeds_list = create_list(seeds_file)
 	for i in range(N):
-		sum += lt_sample(network_dict, seeds_list)
-	return sum / N
+		cnt += lt_sample(network_dict, seeds_list)
+	return cnt / N
 
 
 def ise_ic(network_file, seeds_file):
-	sum = 0.0
+	cnt = 0.0
 	network_dict = create_dict(network_file)
 	seeds_list = create_list(seeds_file)
 	for i in range(N):
-		sum += ic_sample(network_dict, seeds_list)
-	return sum / N
+		cnt += ic_sample(network_dict, seeds_list)
+	return cnt / N
 
 
 # The dictionary key is node 1, with value is a list of neighbours.
 # node 1 -> [(neighbour node, weight), ...]
 # Important: the dictionary should be directed!
 def create_dict(network_file):
-	network = network_file.read().splitlines()[1:]
+	global N
+	count = network_file.readline().strip().split()
+	if int(count[0]) > 10000:
+		N = 1
+	network = network_file.read().splitlines()
 	network_file.close()
 	network_dict = {}
 	for i in network:
