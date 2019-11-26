@@ -30,6 +30,9 @@ def genetic(generation, network, seed_count, model, network_file_name):
 		for j in i:
 			if j not in gene_pool:
 				gene_pool.append(j)
+	# if gene pool is too small, append to enlarge
+	while len(gene_pool) < seed_count:
+		gene_pool.append(random.choice(seed_list))
 	# hybrid N // 4 from previous generation
 	for i in range(N // 4):
 		generation[N // 2 + i] = random.sample(gene_pool, seed_count)
@@ -85,7 +88,7 @@ def main(argv):
 	seeds = imp(network, seed_count, model, network_file_name, time)
 	for i in seeds:
 		print(i)
-	# print(calculate_ise(network_file_name, seeds, model))
+	# print('Result:', calculate_ise(network_file_name, seeds, model))
 
 
 def create_dict(network_file):
